@@ -7,16 +7,18 @@ import { checkUIIntersection } from "../UI/updateUI";
  * SELECT HANDLER
  *
  */
-export const handleSelect = (
-  objectsToTest,
-  placeBtn,
-  selectionUiItem,
-  reticle,
-  controller,
-  raycaster,
-  renderer,
-  scene
-) => {
+export const handleSelect = (data) => {
+  const {
+    objectsToTest,
+    placeBtn,
+    selectionUiItem,
+    reticle,
+    controller,
+    raycaster,
+    renderer,
+    scene,
+  } = data;
+
   const tempMatrix = new THREE.Matrix4();
   tempMatrix.identity().extractRotation(controller.matrixWorld);
   raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
@@ -72,7 +74,8 @@ export const handleSelectEnd = () => {
 /**
  * PLACING OBJECT HANDLER
  */
-export const placeObjectHandler = (state, reticle, scene) => {
+export const placeObjectHandler = (data) => {
+  const { state, reticle, scene } = data;
   if (reticle.visible && state.switchUI.isPlacing) {
     const drone = createDrone();
 

@@ -8,8 +8,6 @@ let dronModel = new THREE.Object3D();
 
 export const createDrone = (scene) => {
   gltfLoader.load("../assets/gltf/DroneLabledFix02.glb", (glb) => {
-    // const logoModel = createLogo();
-    // console.log(logoModel);
     glb.scene.traverse((child) => {
       child.material = bakedMaterial;
     });

@@ -137,8 +137,9 @@ const render = async (timestamp, frame) => {
     const session = renderer.xr.getSession();
     if (hitTestSourceRequested === false) {
       session.requestReferenceSpace("viewer").then(function (referenceSpace) {
+        // viewer position + orientation
         session
-          .requestHitTestSource({ space: referenceSpace })
+          .requestHitTestSource({ space: referenceSpace }) // space surface hit data
           .then(function (source) {
             hitTestSource = source;
           });
@@ -153,13 +154,13 @@ const render = async (timestamp, frame) => {
     }
 
     if (hitTestSource) {
-      const hitTestResults = frame.getHitTestResults(hitTestSource);
+      const hitTestResults = frame.getHitTestResults(hitTestSource); // update surface hit data on each frame
 
       if (hitTestResults.length) {
         const hit = hitTestResults[0];
 
         reticle.visible = true;
-        reticle.matrix.fromArray(hit.getPose(referenceSpace).transform.matrix);
+        reticle.matrix.fromArray(hit.getPose(referenceSpace).transform.matrix); // positioning the xrTarget on the same position and rotation of the hit in the space
       } else {
         reticle.visible = false;
       }
@@ -188,24 +189,31 @@ init();
 window.addEventListener("resize", onWindowResize);
 animate();
 
+objectsToTest = scene.children;
+
+/**
+ * COLLECTED DATA
+ */
+const data = {
+  state,
+  objectsToTest,
+  placeBtn,
+  selectionUiItem,
+  reticle,
+  controller,
+  raycaster,
+  renderer,
+  scene,
+};
+
 /***
  * HANDLERS
  */
-objectsToTest = scene.children;
 const handlersControl = () => {
   if (state.switchUI.isPlacing) {
-    placeObjectHandler(state, reticle, scene);
+    placeObjectHandler(data);
   } else {
-    handleSelect(
-      objectsToTest,
-      placeBtn,
-      selectionUiItem,
-      reticle,
-      controller,
-      raycaster,
-      renderer,
-      scene
-    );
+    handleSelect(data);
   }
 };
 
